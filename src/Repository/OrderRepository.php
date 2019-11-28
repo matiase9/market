@@ -10,6 +10,7 @@ use Monolog\Handler\StreamHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use App\Entity\Status;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method Order|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,7 +20,7 @@ use App\Entity\Status;
  */
 class OrderRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Order::class);
     }
