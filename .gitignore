@@ -1,0 +1,22 @@
+vendor/
+composer.lock
+phpunit.xml
+.php_cs.cache
+composer.phar
+package.tar
+/packages.json
+/.phpunit
+docker/volumes
+.idea/*
+var/
+###> lexik/jwt-authentication-bundle ###
+
+###< lexik/jwt-authentication-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+# Theses files shouldn't commit but I added it to show the test
+#/config/jwt/*.pem
