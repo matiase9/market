@@ -27,11 +27,10 @@ class OrderController extends AbstractFOSRestController
      */
     public function postNewAction(Request $request)
     {
-        $customerIdRequest = $request->get('user_id');
         $productIdRequest = $request->get('product_id');
         $qtyRequest = $request->get('quantity');
 
-        if (!$productIdRequest | !$qtyRequest | !$customerIdRequest) {
+        if (!$productIdRequest | !$qtyRequest) {
             return $this->view('Check the parameters required.', Response::HTTP_FORBIDDEN);
         }
 
@@ -40,11 +39,11 @@ class OrderController extends AbstractFOSRestController
 
         if (!empty($product)) {
             $params = array (
-                'user_id' => $customerIdRequest,
+                'customer_id' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
                 'product_id' => $productIdRequest,
                 'qty' => $qtyRequest
             );
-            $response = $this->getDoctrine()->getRepository(Order::class)->newOrder($params);
+            $response = $this->getDoctrine()->getRepository(Order::class)->newOrder($product, $params);
 
             if ($response['message']) {
                 return $this->view($response['message'], $response['status']);

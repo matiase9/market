@@ -10,6 +10,8 @@ use Monolog\Handler\StreamHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
+
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,13 +19,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Product[]    findAll()
  * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductRepository extends ServiceEntityRepository
+class ProductRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Product::class);
-    }
-
     /**
      * @param $parameters
      * @return mixed
@@ -36,19 +33,17 @@ class ProductRepository extends ServiceEntityRepository
             $product->setPrice($params['price']);
             $product->setStock($params['qty']);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->getEntityManager();
             $entityManager->persist($product);
             $entityManager->flush();
 
             // Logger action
             $logger = new Logger('channel-name');
-            $logger->pushHandler(new StreamHandler( $this->getParameter('root.log').'/info.log', Logger::DEBUG));
             $logger->info('SET PRODUCT => {'. $params['name'] . '}');
             $response['message'] = 'OK';
             $response['status'] = Response::HTTP_OK;
         } catch (Exception $e) {
             $logger = new Logger('connection');
-            $logger->pushHandler(new StreamHandler( $this->getParameter('root.log').'/error.log', Logger::DEBUG));
             $logger->critical($e->getCode() . $e->getMessage());
         }
 

@@ -95,12 +95,12 @@ class Order
         return $this;
     }
 
-    public function getStatusId(): ?int
+    public function getStatusId(): ?string
     {
         return $this->status_id;
     }
 
-    public function setStatusId(int $statusId): self
+    public function setStatusId(string $statusId): self
     {
         $this->status_id = $statusId;
 
